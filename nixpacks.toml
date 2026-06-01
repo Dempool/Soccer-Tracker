@@ -1,0 +1,11 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Nixpacks config — pins the Node.js version for reproducible builds.
+# Without this, Railway picks up whatever Nixpacks defaults to (which has
+# changed in the past mid-deploy and broken builds).
+# ─────────────────────────────────────────────────────────────────────────────
+
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[start]
+cmd = "node server.js"
