@@ -1,0 +1,28 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Railway config — overrides settings from the dashboard for THIS service.
+# Values defined here always win over dashboard config.
+# Reference: https://docs.railway.com/reference/config-as-code
+# ─────────────────────────────────────────────────────────────────────────────
+
+[build]
+# Use Nixpacks (Railway's standard Node builder) — auto-detects from package.json
+builder = "NIXPACKS"
+
+[deploy]
+# Explicit start command — survives any auto-detect changes upstream
+startCommand = "node server.js"
+
+# Railway pings /healthz before routing traffic. Until this returns 200, the
+# new deployment stays gated. /healthz is intentionally dependency-free so a
+# flaky upstream API doesn't cascade into a failed deploy.
+healthcheckPath = "/healthz"
+healthcheckTimeout = 30
+
+# If the container crashes, restart on failure (not always — avoids restart loops
+# on persistent errors). Max 10 retries before Railway gives up and alerts.
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+# Only one instance — this is a stateless cache-warming service; running multiple
+# replicas would just multiply API consumption without adding value.
+numReplicas = 1
